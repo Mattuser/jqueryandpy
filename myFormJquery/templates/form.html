@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFormJquery</title>
+</head>
+<body>
+    <form id="myForm">
+        
+        <label>First Name: </label>
+        <input type="text" name="first_name"/></br><br>
+        <label>Last Name:  </label>
+        <input type="text" name="last_name">
+
+        <b><p>Escolha seu time favorito!!</p></b>
+        <select id="myCombo">
+            <option value="opt1" selected>Santos</option>
+            <option value="opt2">São Paulo</option>
+            <option value="opt3">Corinthians</option>
+            <option value="opt4">Palmeiras</option> 
+        </select>
+        <input type="submit" value="submit"></form>
+    </form><br>
+
+    <b><label>Resposta</label><br></b>
+    <input type="text" name="resp" id="resp">
+
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript">
+        $('#myForm').submit(function(e){
+            e.preventDefault();
+
+            var formobj = {
+                first: $('[name=first_name]').val(),
+                last: $('[name=last_name]').val(),
+                combo: $('#myCombo option:selected').text()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/result',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(formobj),
+                success: function(callback){
+                    console.log(callback)
+                    $('#resp').val(`Olá ${callback.first_name} seu time é ${callback.favorite_team}`);
+                },
+                error: function(){
+                    $(this).html("error!");
+                }
+            })
+        })
+    </script>
+</body>
+</html>
